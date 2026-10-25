@@ -16,9 +16,13 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
           <Link href="/ideas">Ideas</Link>
-          <Link href="/submit">Submit</Link>
-          <Link href="/login">Login</Link>
-          <Link href="/signup" className="rounded-full bg-brand-600 px-4 py-2 text-white">Join</Link>
+          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/companies">Partners</Link>
+          <Link href="/opportunities">Opportunities</Link>
+          <Link href="/mentors">Mentors</Link>
+          <Link href="/admin">Admin</Link>
+          <Link href="/login" className="rounded-full border border-slate-200 px-4 py-2 hover:border-slate-300">Login</Link>
+          <Link href="/signup" className="rounded-full bg-brand-600 px-4 py-2 text-white shadow-soft hover:bg-brand-700">Join</Link>
         </nav>
       </div>
     </header>
