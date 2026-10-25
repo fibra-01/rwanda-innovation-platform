@@ -1,10 +1,8 @@
-import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { getIdeaById } from '@/lib/idea-store';
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
-  const idea = await prisma.idea.findUnique({
-    where: { id: params.id }
-  });
+  const idea = await getIdeaById(params.id);
 
   if (!idea) {
     return NextResponse.json({ error: 'Idea not found' }, { status: 404 });

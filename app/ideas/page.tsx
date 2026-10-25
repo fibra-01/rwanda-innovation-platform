@@ -1,7 +1,31 @@
+"use client";
+
 import Link from 'next/link';
-import { ideas } from '@/lib/data';
+import { useEffect, useState } from 'react';
+import type { IdeaRecord, defaultIdeas } from '@/lib/data';
 
 export default function IdeasPage() {
+  const [ideas, setIdeas] = useState<IdeaRecord[]>(defaultIdeas);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchIdeas = async () => {
+      try {
+        const response = await fetch('/api/ideas');
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setIdeas(data);
+        }
+      } catch (error) {
+        console.error('Unable to load ideas', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIdeas();
+  }, []);
+
   return (
     <main className="mx-auto max-w-7xl px-6 py-16">
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
@@ -23,31 +47,35 @@ export default function IdeasPage() {
         ))}
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-3">
-        {ideas.map((idea) => (
-          <div key={idea.id} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-            <div className="flex items-center justify-between">
-              <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">{idea.category}</span>
-              <span className="text-xs font-medium text-emerald-600">{idea.status}</span>
-            </div>
+      {loading ? (
+        <div className="mt-10 text-slate-500">Loading ideas...</div>
+      ) : (
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          {ideas.map((idea) => (
+            <div key={idea.id} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+              <div className="flex items-center justify-between">
+                <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">{idea.category}</span>
+                <span className="text-xs font-medium text-emerald-600">{idea.status}</span>
+              </div>
 
-            <h2 className="mt-4 text-xl font-bold text-slate-900">{idea.title}</h2>
-            <p className="mt-3 text-sm text-slate-600">{idea.summary}</p>
+              <h2 className="mt-4 text-xl font-bold text-slate-900">{idea.title}</h2>
+              <p className="mt-3 text-sm text-slate-600">{idea.summary}</p>
 
-            <div className="mt-5 flex items-center justify-between text-xs text-slate-500">
-              <span>{idea.company}</span>
-              <span>{idea.stage}</span>
-            </div>
+              <div className="mt-5 flex items-center justify-between text-xs text-slate-500">
+                <span>{idea.company ?? idea.creatorName}</span>
+                <span>{idea.stage}</span>
+              </div>
 
-            <div className="mt-6 flex items-center justify-between">
-              <div className="text-sm text-slate-500">{idea.team}</div>
-              <Link href={`/ideas/${idea.id}`} className="text-sm font-semibold text-brand-600">
-                View details →
-              </Link>
+              <div className="mt-6 flex items-center justify-between">
+                <div className="text-sm text-slate-500">{idea.team ?? 'New team'}</div>
+                <Link href={`/ideas/${idea.id}`} className="text-sm font-semibold text-brand-600">
+                  View details →
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
