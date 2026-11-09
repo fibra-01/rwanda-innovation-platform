@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import type { IdeaRecord, defaultIdeas } from '@/lib/data';
+import { defaultIdeas, type IdeaRecord } from '@/lib/data';
 
 export default function IdeasPage() {
   const [ideas, setIdeas] = useState<IdeaRecord[]>(defaultIdeas);
